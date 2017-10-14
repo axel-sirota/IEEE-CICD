@@ -11,11 +11,6 @@ node {
             sh '. $WORKSPACE/temp/bin/activate'
             sh 'mkdir output'
 
-node {
-
-        stage('Clean') {
-            sh "rm -rf *"
-            sh 'mkdir output'
         }
 
         stage('Checkout SCM') {
