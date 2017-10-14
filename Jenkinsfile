@@ -70,19 +70,16 @@ node {
             archive 'dist/*'
             archive 'output/*'
         }
-
-        stage('Input Password') {
-        def userPasswordInput = input(
-            id: 'userPasswordInput', message: 'your password', parameters: [
-            [$class: 'TextParameterDefinition', defaultValue='mb', description: 'vbn', name: 'password']
-        ]
+        stage('Deploy to Pypi?') {
         input('Deploy to Pypi?')
-        )
         }
 
         stage('Deploy to Pypi') {
             sh "export TWINE_REPOSITORY_URL=${testPypi}"
-            sh "${pythonExecutable} -m twine upload -r test --user axel.sirota --password ${userPasswordInput} dist/funniest_ieee-0.2-py2.py3-none-any.whl"
+            sh "export TWINE_REPOSITORY=${testPypi}"
+            sh "export TWINE_PASSWORD=IEEE-CICDPython"
+            sh "export TWINE_USERNAME=axel.sirota"
+            sh "${pythonExecutable} -m twine upload --config-file .pypirc dist/funniest_ieee-0.2-py2.py3-none-any.whl"
         }
 
         stage('Clean all'){
