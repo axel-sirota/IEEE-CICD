@@ -54,13 +54,13 @@ node {
                         step([
                 $class                     : 'WarningsPublisher',
                 parserConfigurations       : [[parserName: 'PYLint', pattern   : 'output/pylint.log']],
-                unstableTotalAll           : '0',
+                unstableTotalAll           : '20',
                 usePreviousBuildAsReference: true
             ])
             step([
                 $class                     : 'WarningsPublisher',
                 parserConfigurations       : [[parserName: 'Flake8', pattern   : 'output/flake8.log']],
-                unstableTotalAll           : '0',
+                unstableTotalAll           : '20',
                 usePreviousBuildAsReference: true
             ])
         }
@@ -79,7 +79,7 @@ node {
             sh "export TWINE_REPOSITORY=${testPypi}"
             sh "export TWINE_PASSWORD=IEEE-CICDPython"
             sh "export TWINE_USERNAME=axel.sirota"
-            sh "${pythonExecutable} -m twine upload --config-file .pypirc -r test dist/funniest_ieee-0.3-py2.py3-none-any.whl"
+            sh "${pythonExecutable} -m twine upload --config-file .pypirc -r test dist/funniest_ieee-0.4-py2.py3-none-any.whl"
         }
 
         stage('Clean all'){
