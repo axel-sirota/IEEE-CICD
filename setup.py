@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='funniest_ieee',
-      version='0.1',
+      version='0.2',
       description='The funniest_ieee joke in the world',
       url='https://github.com/axel-sirota/IEEE-CICD',
       author='Axel Sirota',
@@ -31,7 +31,8 @@ setup(name='funniest_ieee',
         'pylint',
         'coverage',
         'nosexcover',
-        'flake8'
+        'flake8',
+        'twine'
       ],
       test_suite='nose.collector',
       tests_require=['nose']
