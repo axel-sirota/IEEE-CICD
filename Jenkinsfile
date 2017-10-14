@@ -13,17 +13,17 @@ node {
         }
 
         stage('Build .whl & .tar.gz') {
-            sh "python setup.py bdist_wheel"
+            sh "bash run.sh python setup.py bdist_wheel"
         }
 
         stage('Install dependencies') {
-            sh "python -m pip install -U --quiet . nose"
+            sh "bash run.sh  python -m pip install -U --quiet . nose"
         }
 
         stage('Unit Tests') {
             timestamps {
                 timeout(time: 30, unit: 'MINUTES') {
-                    sh "${python} setup.py nosetests --verbose --xunit-file=output/xunit.xml --tests tests"
+                    sh "bash run.sh  python setup.py nosetests --verbose --xunit-file=output/xunit.xml --tests tests"
                 }
             }
         }
