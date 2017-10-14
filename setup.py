@@ -26,6 +26,13 @@ setup(name='funniest_ieee',
     "Topic :: Software Development :: Libraries :: Python Modules",
     ],
       packages=['funniest_ieee'],
+      install_requires=[
+        'nose',
+        'pylint',
+        'coverage',
+        'nosexcover',
+        'flake8'
+      ],
       test_suite='nose.collector',
       tests_require=['nose']
       )
