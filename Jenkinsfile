@@ -1,6 +1,7 @@
 #!/usr/bin/env groovy
 
 def pythonExecutable = '$WORKSPACE/temp/bin/python3'
+def testPypi = 'https://test.pypi.org/legacy/'
 
 node {
 
@@ -70,10 +71,18 @@ node {
             archive 'output/*'
         }
 
+        stage('Input Password') {
+        def userPasswordInput = input(
+            id: 'userPasswordInput', message: 'your password', parameters: [
+            [$class: 'TextParameterDefinition', defaultValue='mb', description: 'vbn', name: 'password']
+        ]
         input('Deploy to Pypi?')
+        )
+        }
 
         stage('Deploy to Pypi') {
-            sh "${pythonExecutable} -m twine upload -r test dist/funniest_ieee-0.2-py2.py3-none-any.whl"
+            sh "export TWINE_REPOSITORY_URL=${testPypi}"
+            sh "${pythonExecutable} -m twine upload -r test --user axel.sirota --password ${userPasswordInput} dist/funniest_ieee-0.2-py2.py3-none-any.whl"
         }
 
         stage('Clean all'){
