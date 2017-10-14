@@ -1,5 +1,16 @@
 #!/usr/bin/env groovy
 
+def pythonExecutable = '$WORKSPACE/temp/bin/python3'
+
+node {
+
+        stage('Clean') {
+            sh "rm -rf *"
+            sh 'pip3 install virtualenv'
+            sh 'virtualenv --no-site-packages -p $(which python3) temp'
+            sh '. $WORKSPACE/temp/bin/activate'
+            sh 'mkdir output'
+
 node {
 
         stage('Clean') {
@@ -13,17 +24,17 @@ node {
         }
 
         stage('Build .whl & .tar.gz') {
-            sh "bash run.sh python setup.py bdist_wheel"
+            sh "${pythonExecutable} setup.py bdist_wheel"
         }
 
         stage('Install dependencies') {
-            sh "bash run.sh  python -m pip install -U --quiet . nose"
+            sh "${pythonExecutable} -m pip install -U --quiet . nose"
         }
 
         stage('Unit Tests') {
             timestamps {
                 timeout(time: 30, unit: 'MINUTES') {
-                    sh "bash run.sh  python setup.py nosetests --verbose --xunit-file=output/xunit.xml --tests tests"
+                    sh "${pythonExecutable} setup.py nosetests --verbose --xunit-file=output/xunit.xml --tests tests"
                 }
             }
         }
