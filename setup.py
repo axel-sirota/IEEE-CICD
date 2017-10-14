@@ -1,8 +1,8 @@
 from setuptools import setup
 
-setup(name='funniest',
+setup(name='funniest_ieee',
       version='0.1',
-      description='The funniest joke in the world',
+      description='The funniest_ieee joke in the world',
       url='https://github.com/axel-sirota/IEEE-CICD',
       author='Axel Sirota',
       author_email='axel.sirota@example.com',
@@ -25,7 +25,7 @@ setup(name='funniest',
     "Programming Language :: Python :: Implementation :: PyPy",
     "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-      packages=['funniest'],
+      packages=['funniest_ieee'],
       test_suite='nose.collector',
       tests_require=['nose']
       )

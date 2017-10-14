@@ -120,4 +120,4 @@ Results/
 .gitignore
 .idea/inspectionProfiles/
 funniest.egg-info/
-funniest/__pycache__/
+funniest_ieee/__pycache__/
