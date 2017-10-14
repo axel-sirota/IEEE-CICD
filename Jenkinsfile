@@ -37,7 +37,7 @@ node {
             timestamps {
                 timeout(time: 30, unit: 'MINUTES') {
                     try {
-                        sh "${pythonExecutable} setup.py nosetests --verbose --with-xunit --xunit-file=output/xunit.xml --with-xcoverage --xcoverage-file=output/coverage.xml --cover-package=funniest --cover-erase --tests tests/units"
+                        sh "${pythonExecutable} setup.py nosetests --verbose --with-xunit --xunit-file=output/xunit.xml --with-xcoverage --xcoverage-file=output/coverage.xml --cover-package=funniest --cover-erase --tests tests"
                     } finally {
                         step([$class: 'JUnitResultArchiver', testResults: 'output/xunit.xml'])
                         step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'output/coverage.xml', failUnhealthy: true, failUnstable: true, maxNumberOfBuilds: 0, onlyStable: true, sourceEncoding: 'ASCII', zoomCoverageChart: true])
