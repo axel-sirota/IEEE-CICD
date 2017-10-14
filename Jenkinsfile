@@ -79,7 +79,7 @@ node {
             sh "export TWINE_REPOSITORY=${testPypi}"
             sh "export TWINE_PASSWORD=IEEE-CICDPython"
             sh "export TWINE_USERNAME=axel.sirota"
-            sh "${pythonExecutable} -m twine upload --config-file .pypirc -r test dist/funniest_ieee-0.2-py2.py3-none-any.whl"
+            sh "${pythonExecutable} -m twine upload --config-file .pypirc -r test dist/funniest_ieee-0.3-py2.py3-none-any.whl"
         }
 
         stage('Clean all'){

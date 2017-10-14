@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='funniest_ieee',
-      version='0.2',
+      version='0.3',
       description='The funniest_ieee joke in the world',
       url='https://github.com/axel-sirota/IEEE-CICD',
       author='Axel Sirota',
