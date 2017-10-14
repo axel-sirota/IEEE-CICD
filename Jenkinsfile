@@ -21,7 +21,7 @@ node {
 
         stage('Compile') {
             timeout(time: 30, unit: 'SECONDS') {
-                sh "${python} -m compileall -f -q funniest"
+                sh "${pythonExecutable} -m compileall -f -q funniest"
             }
         }
 
@@ -37,7 +37,7 @@ node {
             timestamps {
                 timeout(time: 30, unit: 'MINUTES') {
                     try {
-                        sh "${python} setup.py nosetests --verbose --with-xunit --xunit-file=output/xunit.xml --with-xcoverage --xcoverage-file=output/coverage.xml --cover-package=funniest --cover-erase --tests tests/units"
+                        sh "${pythonExecutable} setup.py nosetests --verbose --with-xunit --xunit-file=output/xunit.xml --with-xcoverage --xcoverage-file=output/coverage.xml --cover-package=funniest --cover-erase --tests tests/units"
                     } finally {
                         step([$class: 'JUnitResultArchiver', testResults: 'output/xunit.xml'])
                         step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'output/coverage.xml', failUnhealthy: true, failUnstable: true, maxNumberOfBuilds: 0, onlyStable: true, sourceEncoding: 'ASCII', zoomCoverageChart: true])
@@ -48,8 +48,8 @@ node {
 
         stage('Code checking') {
 
-            sh "${python} -m pylint --output-format=parseable --reports=y funniest > output/pylint.log || exit 0"
-            sh "${python} -m flake8 --exit-zero --output-file=output/flake8.log funniest"
+            sh "${pythonExecutable} -m pylint --output-format=parseable --reports=y funniest > output/pylint.log || exit 0"
+            sh "${pythonExecutable} -m flake8 --exit-zero --output-file=output/flake8.log funniest"
         }
 
 
