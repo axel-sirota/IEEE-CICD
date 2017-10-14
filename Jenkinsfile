@@ -73,10 +73,7 @@ node {
         input('Deploy to Pypi?')
 
         stage('Deploy to Pypi') {
-            sh '''
-                #!/usr/bin/env bash
-                twine upload -r test dist/funniest_ieee-0.2-py2.py3-none-any.whl
-            '''
+            sh "${pythonExecutable} -m twine upload -r test dist/funniest_ieee-0.2-py2.py3-none-any.whl"
         }
 
         stage('Clean all'){
