@@ -5,6 +5,7 @@ def testPypi = 'https://test.pypi.org/legacy/'
 
 
 def runTests(int threshold, String unitTime, String typeOfTest) {
+    println "Llegue"
     println "${pythonExecutable} setup.py nosetests --verbose --with-xunit --xunit-file=output/xunit.xml --with-xcoverage --xcoverage-file=output/coverage.xml --cover-package=funniest --tests tests/${typeOfTest}"
     timestamps {
         timeout(time: threshold, unit: unitTime) {
