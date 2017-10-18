@@ -3,22 +3,40 @@
 def pythonExecutable = '$WORKSPACE/temp/bin/python3'
 def testPypi = 'https://test.pypi.org/legacy/'
 
+
+def runTests(threshold, unitTime, typeOfTest) {
+    timestamps {
+        timeout(time: ${threshold}, unit: ${unitTime}) {
+            try {
+                sh "${pythonExecutable} setup.py nosetests --verbose --with-xunit --xunit-file=output/xunit.xml --with-xcoverage --xcoverage-file=output/coverage.xml --cover-package=funniest --tests tests/${typeOfTest}"
+            } finally {
+                step([$class: 'JUnitResultArchiver', testResults: 'output/xunit.xml'])
+                step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'output/coverage.xml', failUnhealthy: true, failUnstable: true, maxNumberOfBuilds: 0, onlyStable: true, sourceEncoding: 'ASCII', zoomCoverageChart: true])
+            }
+        }
+    }
+}
+
+def cleanup() {
+    def exec = """
+        rm -rf *
+        pip3 install --quiet virtualenv
+        virtualenv --no-site-packages -p \$(which python3) temp
+        . ${env.WORKSPACE}/temp/bin/activate
+        mkdir output
+    """
+    sh exec
+}
+
 node {
 
         stage('Clean') {
-            sh "rm -rf *"
-            sh 'pip3 install virtualenv'
-            sh 'virtualenv --no-site-packages -p $(which python3) temp'
-            sh '. $WORKSPACE/temp/bin/activate'
-            sh 'mkdir output'
-
+            cleanup()
         }
 
         stage('Checkout SCM') {
-            git branch: 'master',
-            url: 'https://github.com/axel-sirota/IEEE-CICD'
+            checkout scm
         }
-
 
         stage('Compile') {
             timeout(time: 30, unit: 'SECONDS') {
@@ -35,16 +53,7 @@ node {
         }
 
         stage('Unit Tests') {
-            timestamps {
-                timeout(time: 30, unit: 'MINUTES') {
-                    try {
-                        sh "${pythonExecutable} setup.py nosetests --verbose --with-xunit --xunit-file=output/xunit.xml --with-xcoverage --xcoverage-file=output/coverage.xml --cover-package=funniest_ieee --cover-erase --tests tests"
-                    } finally {
-                        step([$class: 'JUnitResultArchiver', testResults: 'output/xunit.xml'])
-                        step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'output/coverage.xml', failUnhealthy: true, failUnstable: true, maxNumberOfBuilds: 0, onlyStable: true, sourceEncoding: 'ASCII', zoomCoverageChart: true])
-                    }
-                }
-            }
+            runTests(30, 'MINUTES', 'units')
         }
 
         stage('Code checking') {
@@ -70,15 +79,12 @@ node {
             archive 'dist/*'
             archive 'output/*'
         }
-        stage('Deploy to Pypi?') {
-        input('Deploy to Pypi?')
-        }
+}
 
+input('Deploy to Pypi?')
+
+node {
         stage('Deploy to Pypi') {
-            sh "export TWINE_REPOSITORY_URL=${testPypi}"
-            sh "export TWINE_REPOSITORY=${testPypi}"
-            sh "export TWINE_PASSWORD=IEEE-CICDPython"
-            sh "export TWINE_USERNAME=axel.sirota"
             sh "${pythonExecutable} -m twine upload --config-file .pypirc -r test dist/funniest_ieee-0.5-py2.py3-none-any.whl"
         }
 
