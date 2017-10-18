@@ -4,7 +4,7 @@ def pythonExecutable = '$WORKSPACE/temp/bin/python3'
 def testPypi = 'https://test.pypi.org/legacy/'
 
 
-def runTests(int threshold, string unitTime, string typeOfTest) {
+def runTests(int threshold, String unitTime, String typeOfTest) {
     timestamps {
         timeout(time: threshold, unit: unitTime) {
             try {
