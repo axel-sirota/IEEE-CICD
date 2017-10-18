@@ -5,10 +5,12 @@ def testPypi = 'https://test.pypi.org/legacy/'
 
 
 def runTests(int threshold, String unitTime, String typeOfTest) {
+    def commandToTest = "${pythonExecutable} setup.py nosetests --verbose --with-xunit --xunit-file=output/xunit.xml --with-xcoverage --xcoverage-file=output/coverage.xml --cover-package=funniest --tests tests/${typeOfTest}"
+    println commandToTest
     timestamps {
         timeout(time: threshold, unit: unitTime) {
             try {
-                sh "${pythonExecutable} setup.py nosetests --verbose --with-xunit --xunit-file=output/xunit.xml --with-xcoverage --xcoverage-file=output/coverage.xml --cover-package=funniest --tests tests/${typeOfTest}"
+                sh commandToTest
             } finally {
                 step([$class: 'JUnitResultArchiver', testResults: 'output/xunit.xml'])
                 step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'output/coverage.xml', failUnhealthy: true, failUnstable: true, maxNumberOfBuilds: 0, onlyStable: true, sourceEncoding: 'ASCII', zoomCoverageChart: true])
